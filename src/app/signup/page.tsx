@@ -39,7 +39,7 @@ const SignUpPage = () => {
                 email,
                 password,
             });
-
+            console.log(data);
             if (error) throw error;
 
             // Success message
@@ -75,6 +75,7 @@ const SignUpPage = () => {
             toast.success('Signed up with Google! Please check your email for verification.');
             router.push('/login'); // Redirect to login page after Google signup
         } catch (error) {
+            console.log(error);
             toast.error('Google signup failed. Please try again.');
         } finally {
             setLoading(false);

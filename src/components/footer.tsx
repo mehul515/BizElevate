@@ -1,5 +1,6 @@
 import { GithubIcon, TwitterIcon, LinkedinIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
 export function Footer() {
   return (
@@ -10,7 +11,7 @@ export function Footer() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {/* Logo and Social Icons */}
             <div className="col-span-1 md:mx-auto">
-              <img src="/logo.png" className="mb-4 h-10" />
+              <Image src={"/logo.png"} height={500} width={500} alt="" className="mb-4 h-10 w-40" />
               <p className="mb-4 text-base">
                 Empowering developers and businesses with cutting-edge solutions for the digital age.
               </p>

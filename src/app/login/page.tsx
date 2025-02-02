@@ -79,7 +79,7 @@ const LoginPage = () => {
             }
 
             // Success message
-            toast.success('Logged in with Google successfully!');
+            toast.success('Logged in with Google successfully!', {duration:1000});
             router.push('/dashboard'); // Redirect to dashboard after Google login
         } catch (error) {
             console.log(error)

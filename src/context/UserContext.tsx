@@ -3,17 +3,30 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase"; // Ensure supabase client is correctly initialized
 
+// Define the types for user and session, allowing email to be undefined
+interface User {
+  id: string;
+  email?: string; // email is now optional
+  // Add other user properties here if needed
+}
+
+interface Session {
+  user: User;
+  access_token: string;
+  // Add other session properties here if needed
+}
+
 interface UserContextProps {
-  user: any;
-  session: any;
+  user: User | null;
+  session: Session | null;
   loading: boolean;
 }
 
 const UserContext = createContext<UserContextProps | null>(null);
 
-export const UserProvider = ({ children }: any) => {
-  const [user, setUser] = useState<any>(null);
-  const [session, setSession] = useState<any>(null);
+export const UserProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true); // Track loading state
 
   useEffect(() => {

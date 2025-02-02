@@ -1,5 +1,4 @@
 // components/ui/spinner.tsx
-import { ReactNode } from 'react';
 
 export const  Spinner = ({ size = 6 }: { size?: number }) => (
   <div

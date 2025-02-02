@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useState } from "react";
 
 type Testimonial = {
@@ -104,9 +105,11 @@ const TestimonialSection = () => {
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: index * 0.2 }}
             >
-              <img
+              <Image
                 src={testimonial.image}
                 alt={testimonial.name}
+                height={500}
+                width={500}
                 className="w-14 h-14 rounded-full"
               />
               <div className="flex flex-col text-left">
@@ -131,7 +134,9 @@ const TestimonialSection = () => {
           transition={{ duration: 1.5 }}
         >
           <div className="flex flex-col sm:flex-row items-center mb-4 sm:mb-6 gap-4">
-            <img
+            <Image
+              height={500}
+              width={500}
               src={testimonials[expandedTestimonialIndex].image}
               alt={testimonials[expandedTestimonialIndex].name}
               className="w-12 h-12 sm:w-14 sm:h-14 rounded-full"

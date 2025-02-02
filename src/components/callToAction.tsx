@@ -4,6 +4,7 @@ import React from 'react'
 import { motion } from 'framer-motion';
 import { Button } from './ui/button';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function CallToAction() {
     return (
@@ -18,11 +19,11 @@ export default function CallToAction() {
                     <div className="relative">
 
                         <div className="flex items-center justify-center -space-x-5">
-                            <img loading="lazy" src="https://randomuser.me/api/portraits/women/12.jpg" alt="member photo" className="h-14 w-14 rounded-full object-cover" />
-                            <img loading="lazy" width="200" height="200" src="https://randomuser.me/api/portraits/women/45.jpg" alt="member photo" className="h-20 w-20 rounded-full object-cover" />
-                            <img loading="lazy" width="200" height="200" src="https://randomuser.me/api/portraits/women/60.jpg" alt="member photo" className="z-10 h-28 w-28 rounded-full object-cover" />
-                            <img loading="lazy" width="200" height="200" src="https://randomuser.me/api/portraits/women/4.jpg" alt="member photo" className="relative h-20 w-20 rounded-full object-cover" />
-                            <img loading="lazy" width="200" height="200" src="https://randomuser.me/api/portraits/women/34.jpg" alt="member photo" className="h-14 w-14 rounded-full object-cover" />
+                            <Image height={500} width={500} src={"/cta/image3.png"} alt="member photo" className="h-14 w-14 rounded-full object-cover" />
+                            <Image height={500} width={500} src={"/cta/image2.png"} alt="member photo" className="h-20 w-20 rounded-full object-cover" />
+                            <Image height={500} width={500} src={"/cta/image1.png"} alt="member photo" className="z-10 h-28 w-28 rounded-full object-cover" />
+                            <Image height={500} width={500} src={"/cta/image4.png"} alt="member photo" className="relative h-20 w-20 rounded-full object-cover" />
+                            <Image height={500} width={500} src={"/cta/image5.png"} alt="member photo" className="h-14 w-14 rounded-full object-cover" />
                         </div>
 
                         <div className="mt-6 m-auto space-y-6">

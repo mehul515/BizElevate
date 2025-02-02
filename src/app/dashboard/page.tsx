@@ -16,11 +16,6 @@ const Dashboard = () => {
     }
   }, [user, loading, router]);
 
-  // Show custom spinner while loading
-  if (loading) {
-    return <Spinner />; // Use your custom spinner component
-  }
-
   // Handle logout
   const handleLogout = async () => {
     try {

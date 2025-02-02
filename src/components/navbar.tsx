@@ -1,22 +1,18 @@
 "use client"
-
-import { useState } from "react"
+import Image from "next/image"
 import { Button } from "./ui/button"
 import Link from "next/link"
 
 export function Navigation() {
-  const [isOpen, setIsOpen] = useState(false)
-
-  const toggleMenu = () => setIsOpen(!isOpen)
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#030313] bg-opacity-50 backdrop-blur-[4px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <a href="/" className="text-white font-bold text-xl">
-              <img src="/logo.png" className="h-10"/>
-            </a>
+            <Link href={"/"} className="text-white font-bold text-xl">
+              <Image src={"/logo.png"} height={500} width={500} alt="" className="h-10 w-40"/>
+            </Link>
           </div>
           <div className="flex items-center">
             <Link href={"/signup"}>
