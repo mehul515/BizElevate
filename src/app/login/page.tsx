@@ -82,6 +82,7 @@ const LoginPage = () => {
             toast.success('Logged in with Google successfully!');
             router.push('/dashboard'); // Redirect to dashboard after Google login
         } catch (error) {
+            console.log(error)
             toast.error('Google login failed. Please try again.');
         } finally {
             setLoading(false);
