@@ -4,6 +4,13 @@ import createGlobe, { COBEOptions } from "cobe";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "../../../utils/cn";
 
+// Define GlobeRenderState to specify the type of state in onRender
+interface GlobeRenderState {
+  phi: number;
+  width: number;
+  height: number;
+}
+
 const GLOBE_CONFIG: COBEOptions = {
   width: 800,
   height: 800,
@@ -42,7 +49,7 @@ export function Globe({
   let phi = 0;
   let width = 0;
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
+
   // Use proper types for refs
   const pointerInteracting = useRef<number | null>(null);
   const pointerInteractionMovement = useRef<number>(0);
@@ -64,13 +71,15 @@ export function Globe({
     }
   };
 
-  // Use Record<string, any> for state to match COBEOptions
   const onRender = useCallback(
     (state: Record<string, any>) => {
+      // Type casting here
+      const typedState = state as GlobeRenderState;
+      
       if (!pointerInteracting.current) phi += 0.005;
-      state.phi = phi + r;
-      state.width = width * 2;
-      state.height = width * 2;
+      typedState.phi = phi + r;
+      typedState.width = width * 2;
+      typedState.height = width * 2;
     },
     [r]
   );
