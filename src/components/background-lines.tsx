@@ -8,7 +8,7 @@ import Link from "next/link";
 export function BackgroundLinesDemo() {
     return (
         <BackgroundLines className="flex items-center justify-center w-full flex-col px-4">
-            <Globe className="hidden md:block my-10" />
+            <Globe className="hidden md:block my-16" />
             <div className="relative z-10 text-center py-24">
                 <h1 className="text-4xl sm:text-6xl p-2 font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 mb-8">
                     Welcome to the Future of Innovation
