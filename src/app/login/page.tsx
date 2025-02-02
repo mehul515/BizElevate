@@ -12,6 +12,7 @@ import { useUser } from '@/context/UserContext'; // Import the user context hook
 const LoginPage = () => {
     const router = useRouter();
     const { user, loading: contextLoading } = useUser(); // Get user context
+    console.log(contextLoading);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
