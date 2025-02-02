@@ -11,11 +11,10 @@ interface GlobeRenderState {
   height: number;
 }
 
-// Updated GLOBE_CONFIG with explicit types and no use of any
 const GLOBE_CONFIG: COBEOptions = {
   width: 800,
   height: 800,
-  onRender: () => {}, // We'll update this to use a specific type
+  onRender: () => {},
   devicePixelRatio: 2,
   phi: 0,
   theta: 0.3,
@@ -51,7 +50,6 @@ export function Globe({
   let width = 0;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Proper typing for refs
   const pointerInteracting = useRef<number | null>(null);
   const pointerInteractionMovement = useRef<number>(0);
 
@@ -72,16 +70,14 @@ export function Globe({
     }
   };
 
-  // Fixing onRender to cast state to Record<string, any> and keep GlobeRenderState's type safety
+  // Fixing onRender to be type-safe with GlobeRenderState and COBEOptions
   const onRender = useCallback(
     (state: GlobeRenderState): void => {
-      // Type casting to match expected Record<string, any>
-      const renderState: Record<string, any> = state;
-
+      // Directly using GlobeRenderState as type
       if (!pointerInteracting.current) phi += 0.005;
-      renderState.phi = phi + r;
-      renderState.width = width * 2;
-      renderState.height = width * 2;
+      state.phi = phi + r;
+      state.width = width * 2;
+      state.height = width * 2;
     },
     [r]
   );
