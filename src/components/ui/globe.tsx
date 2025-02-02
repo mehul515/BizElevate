@@ -4,13 +4,8 @@ import createGlobe, { COBEOptions } from "cobe";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "../../../utils/cn";
 
-// Define GlobeRenderState to specify the type of state in onRender
-interface GlobeRenderState {
-  phi: number;
-  width: number;
-  height: number;
-}
-
+// Remove the GlobeRenderState and directly use Record<string, any> 
+// for the onRender state parameter type
 const GLOBE_CONFIG: COBEOptions = {
   width: 800,
   height: 800,
@@ -48,13 +43,13 @@ export function Globe({
 }) {
   let phi = 0;
   let width = 0;
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Use proper types for refs
+  // Proper typing for refs
   const pointerInteracting = useRef<number | null>(null);
   const pointerInteractionMovement = useRef<number>(0);
 
-  const [r, setR] = useState(0);
+  const [r, setR] = useState<number>(0);
 
   const updatePointerInteraction = (value: number | null) => {
     pointerInteracting.current = value;
@@ -71,15 +66,13 @@ export function Globe({
     }
   };
 
+  // Change onRender to accept Record<string, any> instead of GlobeRenderState
   const onRender = useCallback(
     (state: Record<string, any>) => {
-      // Type casting here
-      const typedState = state as GlobeRenderState;
-      
       if (!pointerInteracting.current) phi += 0.005;
-      typedState.phi = phi + r;
-      typedState.width = width * 2;
-      typedState.height = width * 2;
+      state.phi = phi + r;
+      state.width = width * 2;
+      state.height = width * 2;
     },
     [r]
   );
