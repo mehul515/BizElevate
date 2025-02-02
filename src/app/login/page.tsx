@@ -70,7 +70,7 @@ const LoginPage = () => {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google', // Using Google OAuth provider
                 options: {
-                    redirectTo: "http://localhost:3000/dashboard", // Or wherever you want to redirect after login
+                    redirectTo: "https://bizelevate.vercel.app/dashboard", // Or wherever you want to redirect after login
                 },
             });
 
