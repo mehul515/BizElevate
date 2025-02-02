@@ -2,7 +2,6 @@
 
 import createGlobe, { COBEOptions } from "cobe";
 import { useCallback, useEffect, useRef, useState } from "react";
-
 import { cn } from "../../../utils/cn";
 
 const GLOBE_CONFIG: COBEOptions = {
@@ -65,6 +64,7 @@ export function Globe({
     }
   };
 
+  // Use Record<string, any> for state to match COBEOptions
   const onRender = useCallback(
     (state: Record<string, any>) => {
       if (!pointerInteracting.current) phi += 0.005;

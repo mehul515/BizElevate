@@ -4,7 +4,6 @@ import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { supabase } from "../../../lib/supabase";
-import {Spinner} from "@/components/ui/spinner"; // Update with the correct path to your spinner component
 
 const Dashboard = () => {
   const { user, loading } = useUser();
