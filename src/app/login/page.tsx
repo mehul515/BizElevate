@@ -52,7 +52,7 @@ const LoginPage = () => {
             router.push('/dashboard');
         } catch (error) {
             if (error instanceof Error) {
-                setError(error.message); // Show error message to the user
+                setError(error.message); // Set error message
                 toast.error(`Login failed: ${error.message}`); // Show error toast
             }
         } finally {
@@ -164,7 +164,7 @@ const LoginPage = () => {
 
                             {/* Link to Signup */}
                             <p className="mt-4 text-gray-400">
-                                Don't have an account? <a href="/signup" className="text-blue-500">Sign up here</a>
+                                Don&apos;t have an account? <a href="/signup" className="text-blue-500">Sign up here</a>
                             </p>
                         </div>
                     </div>
