@@ -2,7 +2,7 @@
 
 import createGlobe, { COBEOptions } from "cobe";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { cn } from "../../../utils/cn";
+import { cn } from "../../../utils/cn"; // Adjust the import path as necessary
 
 // Define the GlobeRenderState interface for better type safety
 interface GlobeRenderState {
@@ -18,13 +18,13 @@ const GLOBE_CONFIG: COBEOptions = {
   devicePixelRatio: 2,
   phi: 0,
   theta: 0.3,
-  dark: 1, // Increases the overall darkness
-  diffuse: 0.6, // Adjusts lighting for depth
+  dark: 1,
+  diffuse: 0.6,
   mapSamples: 16000,
-  mapBrightness: 1.5, // Reduces brightness to match dark blue theme
-  baseColor: [0.1, 0.2, 0.5], // Dark Blue
-  markerColor: [0.2, 0.5, 1], // Orange markers
-  glowColor: [0.2, 0.3, 0.7], // Soft Blue Glow
+  mapBrightness: 1.5,
+  baseColor: [0.1, 0.2, 0.5],
+  markerColor: [0.2, 0.5, 1],
+  glowColor: [0.2, 0.3, 0.7],
   markers: [
     { location: [14.5995, 120.9842], size: 0.03 },
     { location: [19.076, 72.8777], size: 0.1 },
@@ -36,30 +36,23 @@ const GLOBE_CONFIG: COBEOptions = {
     { location: [40.7128, -74.006], size: 0.1 },
     { location: [34.6937, 135.5022], size: 0.05 },
     { location: [41.0082, 28.9784], size: 0.06 },
-  ],
+   ],
 };
 
 export function Globe({
-  className,
-  config = GLOBE_CONFIG,
+ className,
+ config = GLOBE_CONFIG,
 }: {
-  className?: string;
-  config?: COBEOptions;
+ className?: string;
+ config?: COBEOptions;
 }) {
-  
-  let phi = 0;
-  
- let width = 0;
-  
+ let phi = 0;
+ let width = useRef(0);
  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  
  const pointerInteracting = useRef<number | null>(null);
-  
  const pointerInteractionMovement = useRef<number>(0);
-  
  const [r, setR] = useState<number>(0);
 
-  
  const updatePointerInteraction = (value: number | null): void => {
    pointerInteracting.current = value;
    if (canvasRef.current) {
@@ -67,7 +60,6 @@ export function Globe({
    }
  };
 
-  
  const updateMovement = (clientX: number): void => {
    if (pointerInteracting.current !== null) {
      const delta = clientX - pointerInteracting.current;
@@ -76,44 +68,42 @@ export function Globe({
    }
  };
 
-  
  const onRender = useCallback(
    (state: Record<string, any>) => {
-     // Cast state to GlobeRenderState type inside the function
      const renderState = state as GlobeRenderState;
 
      if (!pointerInteracting.current) phi += 0.005;
      renderState.phi = phi + r;
-     renderState.width = width * 2;
-     renderState.height = width * 2;
+     renderState.width = width.current * 2;
+     renderState.height = width.current * 2;
    },
    [r]
  );
 
-  
  const onResize = (): void => {
    if (canvasRef.current) {
-     width = canvasRef.current.offsetWidth;
+     width.current = canvasRef.current.offsetWidth;
    }
  };
 
-  
  useEffect(() => {
    window.addEventListener("resize", onResize);
    onResize();
 
    const globe = createGlobe(canvasRef.current!, {
      ...config,
-     width: width * 2,
-     height: width * 2,
+     width: width.current * 2,
+     height: width.current * 2,
      onRender,
    });
 
    setTimeout(() => (canvasRef.current!.style.opacity = "1"));
-   return () => globe.destroy();
+   return () => {
+     globe.destroy();
+     window.removeEventListener("resize", onResize);
+   };
  }, [config, onRender]);
 
-  
  return (
    <div
      className={cn(
@@ -127,7 +117,7 @@ export function Globe({
        )}
        ref={canvasRef}
        onPointerDown={(e) =>
-         updatePointerInteraction(e.clientX - pointerInteractionMovement.current)
+         updatePointerInteraction(e.clientX)
        }
        onPointerUp={() => updatePointerInteraction(null)}
        onPointerOut={() => updatePointerInteraction(null)}
