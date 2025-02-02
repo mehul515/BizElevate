@@ -46,87 +46,96 @@ export function Globe({
   className?: string;
   config?: COBEOptions;
 }) {
+  
   let phi = 0;
-  let width = 0;
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  
+ let width = 0;
+  
+ const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  
+ const pointerInteracting = useRef<number | null>(null);
+  
+ const pointerInteractionMovement = useRef<number>(0);
+  
+ const [r, setR] = useState<number>(0);
 
-  const pointerInteracting = useRef<number | null>(null);
-  const pointerInteractionMovement = useRef<number>(0);
+  
+ const updatePointerInteraction = (value: number | null): void => {
+   pointerInteracting.current = value;
+   if (canvasRef.current) {
+     canvasRef.current.style.cursor = value !== null ? "grabbing" : "grab";
+   }
+ };
 
-  const [r, setR] = useState<number>(0);
+  
+ const updateMovement = (clientX: number): void => {
+   if (pointerInteracting.current !== null) {
+     const delta = clientX - pointerInteracting.current;
+     pointerInteractionMovement.current = delta;
+     setR(delta / 200);
+   }
+ };
 
-  const updatePointerInteraction = (value: number | null): void => {
-    pointerInteracting.current = value;
-    if (canvasRef.current) {
-      canvasRef.current.style.cursor = value !== null ? "grabbing" : "grab";
-    }
-  };
+  
+ const onRender = useCallback(
+   (state: Record<string, any>) => {
+     // Cast state to GlobeRenderState type inside the function
+     const renderState = state as GlobeRenderState;
 
-  const updateMovement = (clientX: number): void => {
-    if (pointerInteracting.current !== null) {
-      const delta = clientX - pointerInteracting.current;
-      pointerInteractionMovement.current = delta;
-      setR(delta / 200);
-    }
-  };
+     if (!pointerInteracting.current) phi += 0.005;
+     renderState.phi = phi + r;
+     renderState.width = width * 2;
+     renderState.height = width * 2;
+   },
+   [r]
+ );
 
-  // Modify the onRender function to be compatible with COBEOptions
-  const onRender = useCallback(
-    (state: Record<string, any>) => {
-      // Casting state to GlobeRenderState type inside the function
-      const renderState: GlobeRenderState = state as GlobeRenderState;
+  
+ const onResize = (): void => {
+   if (canvasRef.current) {
+     width = canvasRef.current.offsetWidth;
+   }
+ };
 
-      if (!pointerInteracting.current) phi += 0.005;
-      renderState.phi = phi + r;
-      renderState.width = width * 2;
-      renderState.height = width * 2;
-    },
-    [r]
-  );
+  
+ useEffect(() => {
+   window.addEventListener("resize", onResize);
+   onResize();
 
-  const onResize = (): void => {
-    if (canvasRef.current) {
-      width = canvasRef.current.offsetWidth;
-    }
-  };
+   const globe = createGlobe(canvasRef.current!, {
+     ...config,
+     width: width * 2,
+     height: width * 2,
+     onRender,
+   });
 
-  useEffect(() => {
-    window.addEventListener("resize", onResize);
-    onResize();
+   setTimeout(() => (canvasRef.current!.style.opacity = "1"));
+   return () => globe.destroy();
+ }, [config, onRender]);
 
-    const globe = createGlobe(canvasRef.current!, {
-      ...config,
-      width: width * 2,
-      height: width * 2,
-      onRender,
-    });
-
-    setTimeout(() => (canvasRef.current!.style.opacity = "1"));
-    return () => globe.destroy();
-  }, [config, onRender]);
-
-  return (
-    <div
-      className={cn(
-        "absolute inset-0 mx-auto aspect-[1/1] w-full max-w-[600px]",
-        className
-      )}
-    >
-      <canvas
-        className={cn(
-          "size-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]"
-        )}
-        ref={canvasRef}
-        onPointerDown={(e) =>
-          updatePointerInteraction(e.clientX - pointerInteractionMovement.current)
-        }
-        onPointerUp={() => updatePointerInteraction(null)}
-        onPointerOut={() => updatePointerInteraction(null)}
-        onMouseMove={(e) => updateMovement(e.clientX)}
-        onTouchMove={(e) =>
-          e.touches[0] && updateMovement(e.touches[0].clientX)
-        }
-      />
-    </div>
-  );
+  
+ return (
+   <div
+     className={cn(
+       "absolute inset-0 mx-auto aspect-[1/1] w-full max-w-[600px]",
+       className
+     )}
+   >
+     <canvas
+       className={cn(
+         "size-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]"
+       )}
+       ref={canvasRef}
+       onPointerDown={(e) =>
+         updatePointerInteraction(e.clientX - pointerInteractionMovement.current)
+       }
+       onPointerUp={() => updatePointerInteraction(null)}
+       onPointerOut={() => updatePointerInteraction(null)}
+       onMouseMove={(e) => updateMovement(e.clientX)}
+       onTouchMove={(e) =>
+         e.touches[0] && updateMovement(e.touches[0].clientX)
+       }
+     />
+   </div>
+ );
 }
