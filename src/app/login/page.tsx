@@ -7,15 +7,15 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
 import { toast } from 'sonner'; // Import Sonner for toast notifications
 import { Spinner } from '@/components/ui/spinner'; // Import Spinner component
-import { useUser } from '@/context/UserContext'; // Import the user context hook
+import { useUser } from '@/context/UserContext'; // Assuming this is your custom hook for user context
 
 const LoginPage = () => {
     const router = useRouter();
-    const { user, loading: contextLoading } = useUser(); // Get user context
+    const { user, loading } = useUser(); // Removed contextLoading
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false); // Add loading state
+    const [loadingState, setLoading] = useState<boolean>(false); // Added loading state
 
     // If the user is already logged in, redirect them to the dashboard
     useEffect(() => {
@@ -91,7 +91,7 @@ const LoginPage = () => {
     return (
         <div className="relative flex h-screen bg-[#060620] text-white justify-center items-center">
             {/* Spinner in the center of the page */}
-            {loading && (
+            {loadingState && (
                 <div className="absolute flex items-center justify-center inset-0 bg-black bg-opacity-50">
                     <Spinner size={16} /> {/* Show spinner */}
                 </div>
@@ -108,7 +108,7 @@ const LoginPage = () => {
                             <Button
                                 className="mx-auto py-5 flex items-center justify-center bg-gray-700 rounded-[7px]"
                                 onClick={handleGoogleLogin}
-                                disabled={loading} // Disable button during loading
+                                disabled={loadingState} // Disable button during loading
                             >
                                 <Image src="/googleIcon.svg" alt="Google" width={25} height={25} />
                                 Log in with Google
@@ -132,7 +132,7 @@ const LoginPage = () => {
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Enter your email"
                                     className="w-full py-5 bg-gray-700 text-white focus:outline-none border-none rounded-[7px]"
-                                    disabled={loading} // Disable input during loading
+                                    disabled={loadingState} // Disable input during loading
                                 />
                             </div>
                             <div>
@@ -143,7 +143,7 @@ const LoginPage = () => {
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Enter your password"
                                     className="w-full py-5 bg-gray-700 rounded-[7px] border-none text-white focus:outline-none"
-                                    disabled={loading} // Disable input during loading
+                                    disabled={loadingState} // Disable input during loading
                                 />
                             </div>
                         </div>
@@ -156,14 +156,14 @@ const LoginPage = () => {
                             <Button
                                 className="py-3 mt-6 bg-blue-600 rounded-[7px]"
                                 onClick={handleLogin}
-                                disabled={loading} // Disable button during loading
+                                disabled={loadingState} // Disable button during loading
                             >
                                 Sign in
                             </Button>
 
                             {/* Link to Signup */}
                             <p className="mt-4 text-gray-400">
-                                Don't have an account? <a href="/signup" className="text-blue-500">Sign up here</a>
+                                Don&apos;t have an account? <a href="/signup" className="text-blue-500">Sign up here</a>
                             </p>
                         </div>
                     </div>
