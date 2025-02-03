@@ -2,19 +2,13 @@
 
 import createGlobe, { COBEOptions } from "cobe";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { cn } from "../../../utils/cn";
 
-// Define the GlobeRenderState interface for better type safety
-interface GlobeRenderState {
-  phi: number;
-  width: number;
-  height: number;
-}
+import { cn } from "../../../utils/cn";
 
 const GLOBE_CONFIG: COBEOptions = {
   width: 800,
   height: 800,
-  onRender: () => {},
+  onRender: () => { },
   devicePixelRatio: 2,
   phi: 0,
   theta: 0.3,
@@ -48,21 +42,19 @@ export function Globe({
 }) {
   let phi = 0;
   let width = 0;
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const pointerInteracting = useRef(null);
+  const pointerInteractionMovement = useRef(0);
+  const [r, setR] = useState(0);
 
-  const pointerInteracting = useRef<number | null>(null);
-  const pointerInteractionMovement = useRef<number>(0);
-
-  const [r, setR] = useState<number>(0);
-
-  const updatePointerInteraction = (value: number | null): void => {
+  const updatePointerInteraction = (value: any) => {
     pointerInteracting.current = value;
     if (canvasRef.current) {
-      canvasRef.current.style.cursor = value !== null ? "grabbing" : "grab";
+      canvasRef.current.style.cursor = value ? "grabbing" : "grab";
     }
   };
 
-  const updateMovement = (clientX: number): void => {
+  const updateMovement = (clientX: any) => {
     if (pointerInteracting.current !== null) {
       const delta = clientX - pointerInteracting.current;
       pointerInteractionMovement.current = delta;
@@ -70,19 +62,17 @@ export function Globe({
     }
   };
 
-  // Fixing onRender to be type-safe with GlobeRenderState and COBEOptions
   const onRender = useCallback(
-    (state: GlobeRenderState): void => {
-      // Directly using GlobeRenderState as type
+    (state: Record<string, any>) => {
       if (!pointerInteracting.current) phi += 0.005;
       state.phi = phi + r;
       state.width = width * 2;
       state.height = width * 2;
     },
-    [r]
+    [r],
   );
 
-  const onResize = (): void => {
+  const onResize = () => {
     if (canvasRef.current) {
       width = canvasRef.current.offsetWidth;
     }
@@ -96,27 +86,29 @@ export function Globe({
       ...config,
       width: width * 2,
       height: width * 2,
-      // onRender,
+      onRender,
     });
 
     setTimeout(() => (canvasRef.current!.style.opacity = "1"));
     return () => globe.destroy();
-  }, [config, onRender]);
+  }, []);
 
   return (
     <div
       className={cn(
         "absolute inset-0 mx-auto aspect-[1/1] w-full max-w-[600px]",
-        className
+        className,
       )}
     >
       <canvas
         className={cn(
-          "size-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]"
+          "size-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]",
         )}
         ref={canvasRef}
         onPointerDown={(e) =>
-          updatePointerInteraction(e.clientX - pointerInteractionMovement.current)
+          updatePointerInteraction(
+            e.clientX - pointerInteractionMovement.current,
+          )
         }
         onPointerUp={() => updatePointerInteraction(null)}
         onPointerOut={() => updatePointerInteraction(null)}
