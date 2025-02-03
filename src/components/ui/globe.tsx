@@ -8,17 +8,17 @@ import { cn } from "../../../utils/cn";
 const GLOBE_CONFIG: COBEOptions = {
   width: 800,
   height: 800,
-  onRender: () => { },
+  onRender: () => {},
   devicePixelRatio: 2,
   phi: 0,
   theta: 0.3,
-  dark: 1, // Increases the overall darkness
-  diffuse: 0.6, // Adjusts lighting for depth
+  dark: 1,
+  diffuse: 0.6,
   mapSamples: 16000,
-  mapBrightness: 1.5, // Reduces brightness to match dark blue theme
-  baseColor: [0.1, 0.2, 0.5], // Dark Blue
-  markerColor: [0.2, 0.5, 1], // Orange markers
-  glowColor: [0.2, 0.3, 0.7], // Soft Blue Glow
+  mapBrightness: 1.5,
+  baseColor: [0.1, 0.2, 0.5],
+  markerColor: [0.2, 0.5, 1],
+  glowColor: [0.2, 0.3, 0.7],
   markers: [
     { location: [14.5995, 120.9842], size: 0.03 },
     { location: [19.076, 72.8777], size: 0.1 },
@@ -43,18 +43,18 @@ export function Globe({
   let phi = 0;
   let width = 0;
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const pointerInteracting = useRef(null);
+  const pointerInteracting = useRef<number | null>(null);
   const pointerInteractionMovement = useRef(0);
   const [r, setR] = useState(0);
 
-  const updatePointerInteraction = (value: any) => {
+  const updatePointerInteraction = (value: number | null) => {
     pointerInteracting.current = value;
     if (canvasRef.current) {
       canvasRef.current.style.cursor = value ? "grabbing" : "grab";
     }
   };
 
-  const updateMovement = (clientX: any) => {
+  const updateMovement = (clientX: number) => {
     if (pointerInteracting.current !== null) {
       const delta = clientX - pointerInteracting.current;
       pointerInteractionMovement.current = delta;
@@ -69,7 +69,7 @@ export function Globe({
       state.width = width * 2;
       state.height = width * 2;
     },
-    [r],
+    [r]
   );
 
   const onResize = () => {
@@ -89,7 +89,12 @@ export function Globe({
       onRender,
     });
 
-    setTimeout(() => (canvasRef.current!.style.opacity = "1"));
+    setTimeout(() => {
+      if (canvasRef.current) {
+        canvasRef.current.style.opacity = "1";
+      }
+    });
+
     return () => globe.destroy();
   }, []);
 
@@ -97,24 +102,22 @@ export function Globe({
     <div
       className={cn(
         "absolute inset-0 mx-auto aspect-[1/1] w-full max-w-[600px]",
-        className,
+        className
       )}
     >
       <canvas
-        className={cn(
-          "size-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]",
-        )}
+        className="size-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]"
         ref={canvasRef}
         onPointerDown={(e) =>
           updatePointerInteraction(
-            e.clientX - pointerInteractionMovement.current,
+            e.clientX - pointerInteractionMovement.current
           )
         }
         onPointerUp={() => updatePointerInteraction(null)}
         onPointerOut={() => updatePointerInteraction(null)}
         onMouseMove={(e) => updateMovement(e.clientX)}
         onTouchMove={(e) =>
-          e.touches[0] && updateMovement(e.touches[0].clientX)
+          e.touches[0] ? updateMovement(e.touches[0].clientX) : null
         }
       />
     </div>
