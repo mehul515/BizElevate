@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
-import { toast } from 'sonner'; // Import Sonner for toast notifications
+import { toast, Toaster } from 'sonner'; // Import Sonner for toast notifications
 import { Spinner } from '@/components/ui/spinner'; // Import Spinner component
 import { useUser } from '@/context/UserContext'; // Import the user context hook
 
@@ -40,6 +40,7 @@ const LoginPage = () => {
                 password,
             });
 
+            console.log(data);
             if (error) throw error;
 
             const user = data?.user; // Access the user from data
@@ -68,10 +69,7 @@ const LoginPage = () => {
 
         try {
             const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google', // Using Google OAuth provider
-                options: {
-                    redirectTo: "https://bizelevate.vercel.app/dashboard", // Or wherever you want to redirect after login
-                },
+                provider: 'google',
             });
 
             if (error) {
@@ -92,6 +90,7 @@ const LoginPage = () => {
 
     return (
         <div className="relative flex h-screen bg-[#060620] text-white justify-center items-center">
+            <Toaster position='top-center'/>
             {/* Spinner in the center of the page */}
             {loading && (
                 <div className="absolute flex items-center justify-center inset-0 bg-black bg-opacity-50">

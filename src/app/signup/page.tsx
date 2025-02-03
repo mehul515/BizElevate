@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import { supabase } from '../../../lib/supabase';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner'; // Import Sonner for toast notifications
+import { toast, Toaster } from 'sonner'; // Import Sonner for toast notifications
 import { Spinner } from '@/components/ui/spinner'; // Import Spinner component
 import { useUser } from '@/context/UserContext'; // Assuming this is your custom hook for user context
 
@@ -35,17 +35,21 @@ const SignUpPage = () => {
         toast.loading('Creating your account...', { id: 'signup-loading' });
 
         try {
-            const { data, error } = await supabase.auth.signUp({
-                email,
-                password,
-            });
-            console.log(data);
-            if (error) throw error;
+            const { data, error } = await supabase.auth.signUp({ email, password });
+
+            console.log(data)
+            if (error) {
+                if (error.message.includes("already registered")) {
+                    toast.error('Your account already exists. Redirecting to login...');
+                    setTimeout(() => router.push('/login'), 2000); // Redirect to login
+                    return;
+                }
+                throw error;
+            }
 
             // Success message
             toast.success('Account created successfully! Please check your email for verification.');
-
-            router.push('/login'); // Redirect to login after successful signup
+            setTimeout(() => router.push('/login'), 2000); // Redirect to login page
         } catch (error) {
             if (error instanceof Error) {
                 setError(error.message); // Show error message to the user
@@ -57,23 +61,30 @@ const SignUpPage = () => {
         }
     };
 
+
     // Handle Google OAuth signup
     const handleGoogleSignup = async () => {
         setLoading(true); // Start loading
         toast.loading('Signing up with Google...', { id: 'google-loading' });
 
         try {
-            const { error } = await supabase.auth.signInWithOAuth({
+            const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google', // Using Google OAuth provider
             });
+            console.log(data)
 
             if (error) {
+                if (error.message.includes("already registered")) {
+                    toast.error('Your account already exists. Redirecting to login...');
+                    setTimeout(() => router.push('/login'), 2000); // Redirect to login after delay
+                    return;
+                }
                 throw error;
             }
 
             // Success message
-            toast.success('Signed up with Google! Please check your email for verification.');
-            router.push('/login'); // Redirect to login page after Google signup
+            toast.success('Signed up with Google! Redirecting...');
+            setTimeout(() => router.push('/dashboard'), 2000); // Redirect to dashboard
         } catch (error) {
             console.log(error);
             toast.error('Google signup failed. Please try again.');
@@ -83,8 +94,10 @@ const SignUpPage = () => {
         }
     };
 
+
     return (
         <div className="relative flex h-screen bg-[#060620] text-white justify-center items-center">
+            <Toaster position='top-center' />
             {/* Spinner in the center of the page */}
             {loading && (
                 <div className="absolute flex items-center justify-center inset-0 bg-black bg-opacity-50">
@@ -175,8 +188,7 @@ const SignUpPage = () => {
                                 className="py-3 mt-6 mx-auto bg-blue-600 rounded-[7px]"
                                 onClick={handleSignup}
                                 disabled={loading} // Disable button during loading
-                            >
-                                {loading ? <Spinner size={16} /> : "Sign up for an account"}
+                            >Sign Up
                             </Button>
 
                             {/* Link to Login */}

@@ -25,15 +25,15 @@ export default function Home() {
   return (
     <div>
       <Navigation />
-      <div className="min-h-screen bg-[#030313] w-full px-5 md:px-20 lg:px-40 flex flex-col items-center justify-start overflow-hidden">
+      <div className="bg-[#030313] w-full px-5 md:px-20 lg:px-40 flex flex-col items-center justify-start overflow-hidden">
         {/* <GoogleGeminiEffectDemo/> */}
-        <div className="relative w-full min-h-screen flex justify-center items-center">
+        <div className="relative w-full flex justify-center items-center">
           <BackgroundLinesDemo />
         </div>
         <div className="relative w-full flex justify-center items-center">
           <Features />
         </div>
-        <div className="relative w-full min-h-screen flex justify-center items-center">
+        <div className="relative w-full flex justify-center items-center">
           <ImpactNumbers />
         </div>
         <HowItWorks />

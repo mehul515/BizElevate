@@ -7,17 +7,20 @@ const features = [
   {
     title: "💡 Innovative Solutions",
     description: "Leverage AI, automation, and advanced technologies to simplify complex tasks and drive continuous innovation in your business.",
-    icon: <Sparkles className="w-10 h-10 text-blue-500" />,
+    color: "bg-blue-500",
+    icon: <Sparkles className="w-8 h-8 text-white" />,
   },
   {
     title: "⚡ Rapid Deployment",
     description: "Launch your projects in record time with streamlined processes, ensuring faster go-to-market with minimal setup and maximum efficiency.",
-    icon: <Rocket className="w-10 h-10 text-purple-500" />,
+    color: "bg-purple-500",
+    icon: <Rocket className="w-8 h-8 text-white" />,
   },
   {
     title: "🛡️ Secure & Reliable",
     description: "Benefit from top-tier security measures and reliable uptime, ensuring protection for your data and uninterrupted operations every day.",
-    icon: <ShieldCheck className="w-10 h-10 text-green-500" />,
+    color: "bg-green-500",
+    icon: <ShieldCheck className="w-8 h-8 text-white" />,
   },
 ];
 
@@ -46,10 +49,14 @@ const Features = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 2, delay: 0.1 + index * 0.2 }} // Added a slight delay to each feature
             viewport={{ once: true }}
-            className="bg-gray-900 border border-gray-700 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition"
+            className="bg-gradient-to-r from-indigo-500/70 to-purple-600/70 border border-gray-700 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition"
           >
             <div className="flex flex-col items-center gap-4">
-              {feature.icon}
+            <div
+                className={`w-16 h-16 flex items-center justify-center rounded-full ${feature.color} mb-4`}
+              >
+                {feature.icon}
+              </div>
               <h3 className="text-xl font-semibold">{feature.title}</h3>
               <p className="text-gray-300">{feature.description}</p>
             </div>

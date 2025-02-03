@@ -1,55 +1,45 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import React from "react";
 import { Card, CardContent } from "./ui/card";
-import { CheckCircle, Rocket, Settings, Users } from "lucide-react"; 
-import { cn } from "../../utils/cn"; // Assuming ShadCN utility for styling
+import { motion } from "framer-motion";
+import { Users, Settings, Rocket, CheckCircle } from "lucide-react"; // Updated icons
 
 const steps = [
   {
     title: "Sign Up & Create Profile",
     description:
-      "Register on our platform with just a few clicks and set up your personalized profile. Add your details, preferences, and interests to get a tailored experience.",
-    icon: <Users className="w-16 h-16 text-blue-500" />,
+      "Get started by registering on our platform in just a few clicks. Set up your profile with details that match your interests and preferences.",
     color: "bg-blue-500",
+    icon: <Users className="w-8 h-8 text-white" />,
   },
   {
     title: "Customize Your Preferences",
     description:
-      "Fine-tune your account settings to match your needs. Choose notification preferences, set goals, and personalize your experience for a seamless journey.",
-    icon: <Settings className="w-16 h-16 text-green-500" />,
+      "Personalize your experience by setting your preferences. Adjust notifications, set goals, and customize your account for a smooth journey.",
     color: "bg-green-500",
+    icon: <Settings className="w-8 h-8 text-white" />,
   },
   {
     title: "Explore & Engage",
     description:
-      "Start exploring the platform’s rich features, connect with like-minded individuals, and engage with exclusive content. Participate in discussions, events, and more.",
-    icon: <Rocket className="w-16 h-16 text-orange-500" />,
+      "Dive into our platform’s features, connect with like-minded individuals, and engage with exclusive content, discussions, and events.",
     color: "bg-orange-500",
+    icon: <Rocket className="w-8 h-8 text-white" />,
   },
   {
     title: "Achieve Your Goals",
     description:
-      "Leverage our powerful tools and resources to stay on track and reach your objectives. Whether it's learning, networking, or productivity, we help you succeed effortlessly.",
-    icon: <CheckCircle className="w-16 h-16 text-purple-500" />,
+      "Use our powerful tools and resources to stay on track and accomplish your objectives, whether in learning, networking, or productivity.",
     color: "bg-purple-500",
+    icon: <CheckCircle className="w-8 h-8 text-white" />,
   },
 ];
 
 export function HowItWorks() {
-  const [currentStep, setCurrentStep] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentStep((prev) => (prev + 1) % steps.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <section className="w-full py-16 px-4 flex flex-col items-center bg-gray-950 text-white">
-      {/* Title */}
+      {/* Title and Subtitle */}
       <motion.h2
         className="text-4xl text-center font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-5 py-3"
         initial={{ opacity: 0, y: -20 }}
@@ -60,41 +50,48 @@ export function HowItWorks() {
         How Our Platform Works
       </motion.h2>
 
-      <p className="text-xl font-medium text-gray-300 mb-12 max-w-[700px] mx-auto text-center">
-      Follow these simple steps to unleash the power of our platform
-      </p>
+      <motion.p
+        className="text-xl font-medium text-gray-300 mb-12 max-w-[700px] mx-auto text-center"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        Follow these simple steps to make the most of your experience.
+      </motion.p>
 
-      {/* Step Progress Indicator */}
-      <div className="flex justify-center items-center space-x-4 mb-6">
+      {/* Steps Section with 2 items per row */}
+      <div className="w-full max-w-4xl grid sm:grid-cols-1 md:grid-cols-2 gap-8">
         {steps.map((step, index) => (
-          <div
+          <motion.div
             key={index}
-            className={cn(
-              "w-8 h-8 rounded-full flex items-center justify-center text-white font-bold transition-all",
-              index === currentStep ? `${step.color} scale-125` : "bg-gray-700"
-            )}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: index * 0.3 }}
+            viewport={{ once: true }}
           >
-            {index + 1}
-          </div>
+            <Card className="bg-gradient-to-r from-indigo-500/70 to-purple-600/70 border border-gray-700 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all ease-in-out duration-300 flex flex-col items-center gap-6 relative">
+              {/* Step Number */}
+              <div
+                className="absolute top-[-12px] left-[-12px] w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold text-2xl shadow-lg"
+              >
+                {index + 1}
+              </div>
+
+              {/* Icon */}
+              <div
+                className={`w-16 h-16 flex items-center justify-center rounded-full ${step.color}`}
+              >
+                {step.icon}
+              </div>
+
+              <CardContent className="p-0 text-center">
+                <h3 className="text-2xl font-semibold text-gray-200">{step.title}</h3>
+                <p className="text-gray-300 text-lg mt-2">{step.description}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
         ))}
       </div>
-
-      {/* Step Content */}
-      <motion.div
-        key={currentStep}
-        className="flex flex-col items-center text-center w-full"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Card className="bg-gray-900 border border-gray-700 md:p-6 py-6 rounded-xl shadow-xl w-full max-w-xl">
-          <CardContent className="flex flex-col items-center text-center gap-4">
-            {steps[currentStep].icon}
-            <h3 className="text-2xl font-semibold text-gray-200">{steps[currentStep].title}</h3>
-            <p className="text-gray-300 text-lg">{steps[currentStep].description}</p>
-          </CardContent>
-        </Card>
-      </motion.div>
     </section>
   );
 }
